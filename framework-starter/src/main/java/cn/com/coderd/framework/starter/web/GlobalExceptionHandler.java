@@ -79,7 +79,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理参数异常
+     * 处理参数异常,使用 @org.springframework.validation.annotation.Validated
      *
      * @param ex BindException
      * @return Response
@@ -95,6 +95,20 @@ public class GlobalExceptionHandler {
                 .orElse("数据校验错误");
         log.error("Handle method argument not valid exception on :{}-{}", requestAttributes.getRequest().getRequestURI(), errorMessage);
         return Result.custom("GA000001", errorMessage, null);
+    }
+
+    /**
+     * 处理参数异常 处理使用 Assert等判断的异常
+     *
+     * @param ex IllegalArgumentException
+     * @return Response
+     */
+    @ResponseStatus(HttpStatus.OK)
+    @ExceptionHandler({IllegalArgumentException.class})
+    public Result<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+        log.error("Handle method argument not valid exception on :{}-{}", requestAttributes.getRequest().getRequestURI(), ex.getMessage());
+        return Result.custom("GA000001", ex.getMessage(), null);
     }
 
     /**
