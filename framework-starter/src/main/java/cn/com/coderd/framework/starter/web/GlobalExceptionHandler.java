@@ -107,7 +107,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({IllegalArgumentException.class})
     public Result<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        log.error("Handle method argument not valid exception on :{}-{}", requestAttributes.getRequest().getRequestURI(), ex.getMessage());
+        log.error("Handle illegal argument exception on :{}-{}", requestAttributes.getRequest().getRequestURI(), ex.getMessage());
         return Result.custom("GA000001", ex.getMessage(), null);
     }
 
