@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>cn.com.coderd.framework</groupId>
+        <artifactId>framework-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../framework-parent/pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>framework-openapi</artifactId>
+    <name>framework-openapi</name>
+    <description>
+        该项目为openapi集成,通过该项目配置访问各个项目的接口定义
+    </description>
+    <dependencies>
+        <dependency>
+            <groupId>cn.com.coderd.framework</groupId>
+            <artifactId>framework-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.openapi.version}</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.openapitools</groupId>
+                <artifactId>openapi-generator-maven-plugin</artifactId>
+                <version>5.4.0</version>
+                <configuration>
+                    <inputSpec>${project.basedir}/src/main/resources/api-docs.yaml</inputSpec>
+                    <generatorName>javascript</generatorName>
+                    <configOptions>
+                        <sourceFolder>src</sourceFolder>
+                    </configOptions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

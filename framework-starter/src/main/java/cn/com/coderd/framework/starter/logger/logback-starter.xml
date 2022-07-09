@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+logback日志配置项增强
+使用时添加载<include resource="cn/com/coderd/framework/starter/logger/logback-starter.xml"/>
+-->
+
+<included>
+    <!--引入spring默认配置-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <!--设置默认全局日志目录-->
+    <springProperty scope="system" name="LOG_ROOT" source="LOG_ROOT" defaultValue="/tmp"/>
+    <!--引入spring应用名称-->
+    <springProperty scope="system" name="spring.application.name" source="spring.application.name"/>
+    <!--设置默认应用日志目录-->
+    <property name="LOG_PATH" value="${LOG_ROOT}/${spring.application.name}"/>
+    <!--设置上下文名称-->
+    <contextName>${spring.application.name}</contextName>
+</included>

@@ -1,0 +1,80 @@
+version: "3.9"
+services:
+  rmq_name_svr:
+    image: apacherocketmq/rocketmq-nameserver:4.5.0-alpine
+    container_name: rmq_name_svr
+    #    ports:
+    #      - 9876:9876
+    network_mode: host
+    restart: on-failure
+    command: sh mqnamesrv
+  rmq_broker:
+    image: apacherocketmq/rocketmq-broker:4.5.0-alpine
+    container_name: rmq_bocker_a
+    #    ports:
+    #      - 10909:10909
+    #      - 10911:10911
+    #      - 10912:10912
+    depends_on:
+      - rmq_name_svr
+    network_mode: host
+    restart: on-failure
+    volumes:
+      - ./broker.conf:/home/rocketmq/broker.conf
+    #    command: sh mqbroker -n rmq_name_svr:9876 -c /home/rocketmq/broker.conf
+    command: sh mqbroker -n 127.0.0.1:9876 -c /home/rocketmq/broker.conf
+  rmq_dashboard:
+    image: apacherocketmq/rocketmq-dashboard:1.0.0
+    container_name: rmq_dashboard
+    network_mode: host
+    restart: on-failure
+    #    ports:
+    #      - 8081:8080
+    depends_on:
+      - rmq_name_svr
+  mysql-sa:
+    image: mysql:5.7
+    container_name: mysql-sa
+    network_mode: host
+    #    ports:
+    #    - 3306:3306
+    restart: on-failure
+    environment:
+      MYSQL_ROOT_PASSWORD: root@123
+  nacos-quick:
+    image: nacos/nacos-server:2.0.2
+    container_name: nacos-quick
+    network_mode: host
+    #    ports:
+    #    - 8848:8848
+    restart: on-failure
+    environment:
+      MODE: standalone
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MYSQL_SERVICE_HOST: 127.0.0.1
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_DB_NAME: nacos_config
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: root@123
+    depends_on:
+      - mysql-sa
+  redis:
+    image: redis:6
+    container_name: redis
+    network_mode: host
+    #    ports:
+    #    - 6379:6379
+    restart: on-failure
+    command: redis-server --requirepass foobared
+
+  sentinel-dashboard:
+    image: bladex/sentinel-dashboard:1.8.0
+    container_name: sentinel-dashboard
+    network_mode: host
+    restart: on-failure
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    network_mode: host
+    restart: on-failure

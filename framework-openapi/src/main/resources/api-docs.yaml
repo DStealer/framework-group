@@ -1,0 +1,119 @@
+openapi: 3.0.1
+info:
+  title: 消费者示例
+  version: 0.0.1
+servers:
+  - url: http://172.16.24.199:8082
+    description: Generated server url
+tags:
+  - name: 测试环境
+paths:
+  /message/login:
+    post:
+      tags:
+        - message-controller-impl
+      operationId: loginMessage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginMessageRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultLoginMessageResponse'
+  /login/app/login:
+    post:
+      tags:
+        - login-controller-impl
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultLoginResponse'
+  /file/transfer:
+    post:
+      tags:
+        - file-controller-impl
+      operationId: transfer
+      parameters:
+        - name: param1
+          in: query
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - file
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+components:
+  schemas:
+    LoginMessageRequest:
+      type: object
+      properties:
+        mobile:
+          type: string
+    LoginMessageResponse:
+      type: object
+      properties:
+        content:
+          type: string
+    ResultLoginMessageResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        msg:
+          type: string
+        data:
+          $ref: '#/components/schemas/LoginMessageResponse'
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+    ResultLoginResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        msg:
+          type: string
+        data:
+          $ref: '#/components/schemas/LoginResponse'

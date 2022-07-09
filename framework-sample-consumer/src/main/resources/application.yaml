@@ -1,0 +1,181 @@
+server:
+  port: 0
+  tomcat:
+    basedir: ${WEB_ROOT:${java.io.tmpdir}}/${spring.application.name}/tomcat
+
+grpc:
+  server:
+    port: 0
+  client:
+    GLOBAL:
+      negotiation-type: plaintext
+      default-load-balancing-policy: gray_round_robin
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 60000
+        logger-level: FULL
+  sentinel:
+    enabled: true
+  circuitbreaker:
+    enabled: true
+  httpclient:
+    disable-ssl-validation: true
+    follow-redirects: false
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: "10MB"
+      max-request-size: "12MB"
+  cloud:
+    sentinel:
+      eager: true
+      transport:
+        dashboard: 127.0.0.1:8858
+      log:
+        dir: ${SENTINEL_ROOT:${java.io.tmpdir}}/${spring.application.name}/csp
+      datasource:
+        nacos:
+          serverAddr: 127.0.0.1:8848
+        flow-ds:
+          nacos:
+            dataId: ${spring.application.name}-flow
+            ruleType: flow
+            namespace: public
+        degrade-ds:
+          nacos:
+            dataId: ${spring.application.name}-degrade
+            ruleType: degrade
+            namespace: public
+        param-flow-ds:
+          nacos:
+            dataId: ${spring.application.name}-param-flow
+            ruleType: param-flow
+            namespace: public
+        system-ds:
+          nacos:
+            dataId: ${spring.application.name}-system
+            ruleType: system
+            namespace: public
+        authority-ds:
+          nacos:
+            dataId: ${spring.application.name}-authority
+            ruleType: authority
+            namespace: public
+    stream:
+      poller:
+        initial-delay: 10000
+      default-binder: rocketmq
+      bindings:
+        login-message: #绑定名称
+          destination: login-message #交换机名称
+          group: ${spring.application.name}
+          binder: rocketmq
+          producer:
+            autoStartup: true
+          consumer:
+            autoStartup: true
+      rocketmq:
+        binder:
+          name-server: 127.0.0.1:9876
+          enable-msg-trace: true
+          customized-trace-topic: RMQ_SYS_TRACE_TOPIC
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: foobared
+    lettuce:
+      pool:
+        max-active: 500
+        max-wait: 10s
+        min-idle: 5
+        max-idle: 10
+        time-between-eviction-runs: 30m
+
+dubbo:
+  application:
+    name: ${spring.application.name}
+    default: true
+    logger: slf4j
+  registry:
+    id: default
+    address: nacos://127.0.0.1:8848?namespace=public
+    default: true
+    simplified: true
+    parameters:
+      file: ${DUBBO_ROOT:${java.io.tmpdir}}/${spring.application.name}/dubbo/registry_default.cache
+  protocols:
+    dubbo:
+      name: dubbo
+      default: true
+      port: -1
+      threadname: dubbo
+      threadpool: cached
+      corethreads: 200
+      threads: 1000
+      serialization: kryo
+  consumer:
+    check: false
+    default: true
+    timeout: 15000
+  provider:
+    protocol: dubbo
+    timeout: 10000
+    validation: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"
+
+  spring.application.name=sqj-web-mobile
+  server.port=10085
+
+  spring.redis.host=127.0.0.1
+  spring.redis.port=6379
+  spring.redis.password=foobared
+  spring.redis.lettuce.pool.max-active=500
+  spring.redis.lettuce.pool.max-wait=10s
+  spring.redis.lettuce.pool.min-idle=5
+  spring.redis.lettuce.pool.max-idle=10
+  spring.redis.lettuce.pool.time-between-eviction-runs=30m
+
+  dubbo.registry.address=zookeeper://127.0.0.1:2181
+
+  spring.rabbitmq.host=10.8.0.6
+  spring.rabbitmq.port=10043
+  spring.rabbitmq.username=admin
+  spring.rabbitmq.password=admin
+  spring.rabbitmq.virtual-host=my_vhost
+  spring.rabbitmq.on-off=1
+
+  dubbo.consumer.check=false
+  dubbo.registry.check=false
+
+  sqj.session.exclude.patterns[0]=/sggl/mobile/home/v1.0/banner/**
+  sqj.session.exclude.patterns[1]=/sggl/worker/v1.0/menu/**
+  sqj.session.exclude.patterns[2]=/sggl/mobile/home/v1.0/news/**
+  sqj.session.exclude.patterns[3]=/sggl/mobile/home/v1.0/notice/**
+  sqj.session.exclude.patterns[4]=/sggl/mobile/home/v1.0/sys/inform/**
+
+
+  sqj.fdfs.secret_key=gbRUazMAH5WMkoY4RMWp
+
+  sqj.fdfs.tracker-servers=192.168.1.31:22122
+
+  sqj.fdfs.tracker-servers-internal= 192.168.1.31:22122
+
+  sqj.file.prefix=http://10.8.0.6:10051/f/
+
+  sqj.file.prefix-internal = http://10.8.0.6:10051/f/
+
+
+  spring.servlet.multipart.enabled=true
+  spring.servlet.multipart.max-file-size=20MB
+  spring.servlet.multipart.max-request-size=20MB

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package cn.com.coderd.framework.service;
+
+option java_outer_classname = "HelloWord";
+option java_package = "cn.com.coderd.framework.service.generated";
+option java_multiple_files = true;
+
+
+// The greeting service definition.
+service Greeter {
+    // Sends a greeting
+    rpc SayHello(HelloReq) returns (HelloReply) {}
+}
+
+// The request message containing the user's name.
+message HelloReq {
+    string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+    string message = 1;
+}

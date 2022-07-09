@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.com.coderd.framework</groupId>
+        <artifactId>framework-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../framework-parent/pom.xml</relativePath>
+    </parent>
+    <artifactId>framework-sample-provider</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>framework-sample-provider</name>
+    <description>
+        生产者代码示例
+    </description>
+    <dependencies>
+        <dependency>
+            <groupId>cn.com.coderd.framework</groupId>
+            <artifactId>framework-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+
+        </dependency>
+        <dependency>
+            <groupId>cn.com.coderd.framework</groupId>
+            <artifactId>framework-sample-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>

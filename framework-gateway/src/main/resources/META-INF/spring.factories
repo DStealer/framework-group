@@ -1,0 +1,6 @@
+#custom auto bootstrap configuration
+org.springframework.cloud.bootstrap.BootstrapConfiguration=\
+cn.com.coderd.framework.gateway.bootstrap.NacosDataBootstrapConfiguration
+#custom context initializer
+org.springframework.context.ApplicationContextInitializer=\
+cn.com.coderd.framework.gateway.bootstrap.BootstrapInfoInitializer

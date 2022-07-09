@@ -1,0 +1,88 @@
+server:
+  port: 8083
+spring:
+  cloud:
+    sentinel:
+      eager: true
+      transport:
+        dashboard: 127.0.0.1:8858
+      log:
+        dir: ${java.io.tmpdir}/${spring.application.name}/csp
+      datasource:
+        nacos:
+          serverAddr: 127.0.0.1:8848
+        flow-ds:
+          nacos:
+            dataId: ${spring.application.name}-flow
+            ruleType: flow
+        degrade-ds:
+          nacos:
+            dataId: ${spring.application.name}-degrade
+            ruleType: degrade
+        param-flow-ds:
+          nacos:
+            dataId: ${spring.application.name}-param-flow
+            ruleType: param-flow
+        system-ds:
+          nacos:
+            dataId: ${spring.application.name}-system
+            ruleType: system
+        authority-ds:
+          nacos:
+            dataId: ${spring.application.name}-authority
+            ruleType: authority
+        gw-flow-ds:
+          nacos:
+            dataId: ${spring.application.name}-gw-flow
+            ruleType: gw-flow
+        gw-api-group-ds:
+          nacos:
+            dataId: ${spring.application.name}-gw-api-group
+            ruleType: gw-api-group
+    gateway:
+      enabled: true
+      httpclient:
+        connectTimeout: 5
+        maxHeaderSize: 10240
+      discovery:
+        locator:
+          enabled: true
+      loadbalancer:
+        use404: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: foobared
+    lettuce:
+      pool:
+        max-active: 500
+        max-wait: 10s
+        min-idle: 5
+        max-idle: 10
+        time-between-eviction-runs: 30m
+
+gateway:
+  tenant:
+    jsonm-specs:
+      default:
+        privateKey: "471eb0ced64f493216cdfc9dcb1289b474b2297f5d10b41b77ec63aadf292973"
+        publicKey: "04842ecf2c7c770c7d1201eebcd39000983405348e1e097de5515faf209cc1acc7df3b0e54fc58d31e99afc6af5ef0785edbb2af6c5135ebbd4e84c926fdcbe88c"
+    jsonx-specs:
+      default:
+        privateKey: "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAL8VEIO4Rh9R95+w\nQIUFpOJ/5MMHoGlzg/rZIlCBIFUuGVPRZZAuq+EK7ROLVDNKq55FjBraWGj41uZm\nGDfDmGChHkwmFmW3yNauguYylEPJqk6uUzVMI+0qYmvgLfgFVygUXKQUmlmVxRQN\neUG814v7oM2IxLgrDLMGj9LC0eJlAgMBAAECgYBSJqxC9SawsHzVmuEiT5rkBjhD\n4TOGIrPLVS77jYhpFris4InZwzcCOcBTdsNsid3e3eeuY9E+0D0UMTCYSO9pXFun\n95aoaAvstJ3VVlcx5SIGPOwMh+/y14KhaEXXBZENhXBY6F6sdsJ7JN6X/YuFcBmd\nKHd6ObrlY/IZyuS2wQJBAPjW7OSmKPBfKklaH5efxAdbRBwhxunPvTLymmu97sC6\nELxPvD8UYeU1K6oLzOJW5tbAOgIsRwXKs7gihyWIePcCQQDElKuxGLk6p0SYPAUT\nymlntNf9v1+qUeiqoXRRVk/QrcfpcRT3LkOre9RCoWH9gVhINhRzp657RX6Eb+6/\nwOSDAkBuIUkU5QknYSbo8e8bfwUWMGlTfgt3/Y4B12dKmfPp7i9r+GobDN1KwR6D\nEtfpsIZXsxm5TnlccdraesWPcff/AkBVWIqWD7rTeS1xvpUhu345tS0VEJITGw6d\njg03BvcODXS+qAbHLgHZIKDN8MzfR9mxODF26PT6tfgwvXv1KmTLAkEA7FGthHqe\n7z5zwnlX5NpEuww4acBb1n67bjk09BViLmzo/zHxpjqxGJRVMYPzKowXo0IQ3siS\nPom43THeo996xQ=="
+        publicKey: "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIChyt5d72n3cVSF5qr1knErqT\nvCFksg5piOz2mLk1u2BxPfHXhlRH64Ajw2g9kFxZBDChfqyG1ztqZ9vcRKivm6dB\nvuQCHjCjK44ZpTEP11c0ROxufBIGDXCKv6+5Lc2iIzoPHlELTeYreJWIYmRWgIeH\nk2IKN88SfXFrEC8+EwIDAQAB"
+    exclude-patterns:
+      - /*
+  security:
+    showDetail: true
+    urlPattern: "%2B|%20|%2F|%3F|%25|%23|%26|%3D|%27|%22|%28|%29|\\*"
+    htmlPattern: "<[\r\n| |\t]*a|<[\r\n| |\t]*iframe|<[\r\n| |\t]*body|<[\r\n| |\t]*form|<[\r\n| |\t]*base|<[\r\n| |\t]*img|src[\r\n| |\t]*=[\r\n| |\t]*|<[\r\n| |\t]*style|<[\r\n| |\t]*div|<[\r\n| |\t]*object|<[\r\n| |\t]*meta|<[\r\n| |\t]*link|<[\r\n| |\t]*input|<[\r\n| |\t]*comment|<[\r\n| |\t]*br|&nbsp;|&quot;|&amp;|&#x27;|&#x2F;|&lt;|&gt;|&AElig;|&Aacute;|&Acirc;|&Agrave;|&Aring;|&Atilde;|&Auml;|&Ccedil;|&ETH;|&Eacute;|&Ecirc;|&Egrave;|&Euml;|&Iacute;|&Icirc;|&Igrave;|&Iuml;|&Ntilde;|&Oacute;|&Ocirc;|&Ograve;|&Oslash;|&Otilde;|&Ouml;|&THORN;|&Uacute;|&Ucirc;|&Ugrave;|&Uuml;|&Yacute;|&aacute;|&acirc;|&aelig;|&agrave;|&aring;|&atilde;|&auml;|&ccedil;|&eacute;|&ecirc;|&egrave;|&eth;|&euml;|&iacute;|&icirc;|&igrave;|&iuml;|&ntilde;|&oacute;|&ocirc;|&ograve;|&oslash;|&otilde;|&ouml;|&szlig;|&thorn;|&uacute;|&ucirc;|&ugrave;|&uuml;|&yacute;|&yuml;|&cent;|\\\\\"|&|&#39"
+    jsPattern: "%|<|>|&|\"|'|\\\\|\\\\r|\\\\n|\\\\\\\\|\\\\t|\\\\f|\\\\b|!|@|#|\\$|\\^|\\*|\\(|\\)|~|\\?|;|`|=|\\[|\\]|javascript[\r\n| |\t]*:[\r\n| |\t]*|<[\r\n| |\t]*script[\r\n| |\t]*>(.*?)</[\r\n| |\t]*script[\r\n| |\t]*>|function[\r\n| |\t]+|function[\r\n| |\t]*\\((.*?)\\)|jscript|vbscript[\r\n| |\t]*:[\r\n| |\t]*|onfocus[\r\n| |\t]*=|onblur[\r\n| |\t]*=|alert[\r\n| |\t]*\\((.*?)\\)|location[\r\n| |\t]*\\.[\r\n| |\t]*|document[\r\n| |\t]*\\.[\r\n| |\t]*|window[\r\n| |\t]*\\.[\r\n| |\t]*|onclick[\r\n| |\t]*=|href[\r\n| |\t]*=|<!--|--|->|/\\\\\\\\\\\\\\*|\\\\\\\\\\\\\\*/|confirm[\r\n| |\t]*\\((.*?)\\)|prompt[\r\n| |\t]*\\((.*?)\\)|\\(\\)|//|onerror[\r\n| |\t]*=|/\\*|data:|\\\\u003e|\\\\u003c|eval[\r\n| |\t]*\\((.*?)\\)|url[\r\n| |\t]*=|(?<![a-zA-Z0-9]+)expr(?![a-zA-Z0-9]+)|URLUnencoded|referrer|write[\r\n| |\t]*\\((.*?)\\)|writeln[\r\n| |\t]*\\((.*?)\\)|body[\r\n| |\t]*\\.[\r\n| |\t]*innerHtml|execScript[\r\n| |\t]*\\((.*?)\\)|setInterval[\r\n| |\t]*\\((.*?)\\)|setInterval[\r\n| |\t]*=|setTimeout[\r\n| |\t]*\\((.*?)\\)|setTimeout[\r\n| |\t]*=|open[\r\n| |\t]*\\((.*?)\\)|navigate[\r\n| |\t]*\\.[\r\n| |\t]*|srcdoc|%0a|</|[\\D|\\s|\\d]*[\\D|\\s]+[\\D|\\s|\\d]*\\.|\\.[\\D|\\s|\\d]*[\\D|\\s]+[\\D|\\s|\\d]*|^[\\D|\\s|\\d]*\\.$|^\\.[\\D|\\s|\\d]*$"
+    sqlPattern: "[\r\n| |\t]+and[\r\n| |\t]+|[\r\n| |\t]+or[\r\n| |\t]+|(?<![a-zA-Z0-9]+)exec[\r\n| |\t]+|(?<![a-zA-Z0-9]+)exec[\r\n| |\t]*\\((.*?)\\)|(?<![a-zA-Z0-9]+)execute[\r\n| |\t]+|(?<![a-zA-Z0-9]+)execute[\r\n| |\t]*\\((.*?)\\)|(?<![a-zA-Z0-9]+)insert[\r\n| |\t]+|(?<![a-zA-Z0-9]+)select[\r\n| |\t]+|(?<![a-zA-Z0-9]+)delete[\r\n| |\t]+|(?<![a-zA-Z0-9]+)update[\r\n| |\t]+|(?<![a-zA-Z0-9]+)alter[\r\n| |\t]+|(?<![a-zA-Z0-9]+)create[\r\n| |\t]+|(?<![a-zA-Z0-9]+)drop[\r\n| |\t]+|(?<![a-zA-Z0-9]+)count[\r\n| |\t]*\\((.*?)\\)|\\\\\\*|(?<![a-zA-Z0-9]+)chr[\r\n| |\t]*\\((.*?)\\)|(?<![a-zA-Z0-9]+)char[\r\n| |\t]*\\((.*?)\\)|[\r\n| |\t]+asc|[\r\n| |\t]+desc|(?<![a-zA-Z0-9]+)mid[\r\n| |\t]*\\((.*?)\\)|(?<![a-zA-Z0-9]+)substring[\r\n| |\t]*\\((.*?)\\)|[\r\n| |\t]+master[\r\n| |\t]+|(?<![a-zA-Z0-9]+)truncate[\r\n| |\t]+|(?<![a-zA-Z0-9]+)declare[\r\n| |\t]+|xp_cmdshell|(?<![a-zA-Z0-9]+)restore[\r\n| |\t]+|(?<![a-zA-Z0-9]+)backup[\r\n| |\t]+|net[\r\n| |\t]*\\+user|net[\r\n| |\t]*\\+localgroup[\r\n| |\t]*\\+administrators|%|net[\r\n| |\t]*localgroup[\r\n| |\t]*administrators|net[\r\n| |\t]*user|like'|[\r\n| |\t]+table[\r\n| |\t]+|[\r\n| |\t]+from[\r\n| |\t]+|(?<![a-zA-Z0-9]+)grant[\r\n| |\t]+|(?<![a-zA-Z0-9]+)use[\r\n| |\t]+|column_name|group_concat|information_schema[\r\n| |\t]*\\.[\r\n| |\t]*columns|table_schema|[\r\n| |\t]+union[\r\n| |\t]+|[\r\n| |\t]+where[\r\n| |\t]+|[\r\n| |\t]+order[\r\n| |\t]+|[\r\n| |\t]+by[\r\n| |\t]+|[\r\n| |\t]+join[\r\n| |\t]+|(?<![a-zA-Z0-9]+)modify[\r\n| |\t]+|\\+|--|[\r\n| |\t]+into[\r\n| |\t]+|(?<![a-zA-Z0-9]+)substr[\r\n| |\t]*\\((.*?)\\)|ascii|'|%27|\\(|%28|\\)|%29|%25|[\r\n| |\t]+having[\r\n| |\t]+"
+    specialPatterns:
+      - url: "/framework-sample-consumer/login/app/login"
+        patterns:
+          - filed: "/k1/kk1/kkk1/kkkk1"
+            pattern: "^.+$"
+          - filed: "/username/*/k0"
+            pattern: "^.+$"

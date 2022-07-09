@@ -1,0 +1,20 @@
+#custom auto bootstrap configuration
+org.springframework.cloud.bootstrap.BootstrapConfiguration=\
+cn.com.coderd.framework.starter.nacos.NacosDataBootstrapConfiguration
+#custom auto configuration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+cn.com.coderd.framework.starter.web.WebMvcConfiguration,\
+cn.com.coderd.framework.starter.redis.RedisConfiguration,\
+cn.com.coderd.framework.starter.rabbit.RabbitMQConfiguration,\
+cn.com.coderd.framework.starter.message.MessageConfiguration,\
+cn.com.coderd.framework.starter.client.ClientConfiguration,\
+cn.com.coderd.framework.starter.sentinel.SentinelConfiguration,\
+cn.com.coderd.framework.starter.mybatis.MybatisPlusConfiguration,\
+cn.com.coderd.framework.starter.grpc.GrpcConfiguration,\
+cn.com.coderd.framework.starter.gray.GrayHttpConfiguration,\
+cn.com.coderd.framework.starter.gray.GrayGrpcConfiguration,\
+cn.com.coderd.framework.starter.gray.ContextBlockingLoadBalancerClientConfiguration,\
+cn.com.coderd.framework.starter.jasypt.Sm4Configuration
+#custom context initializer
+org.springframework.context.ApplicationContextInitializer=\
+cn.com.coderd.framework.starter.boot.BootstrapInfoInitializer

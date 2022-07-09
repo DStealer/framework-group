@@ -1,0 +1,159 @@
+server:
+  port: 0
+  tomcat:
+    basedir: ${WEB_ROOT:${java.io.tmpdir}}/${spring.application.name}/tomcat
+
+grpc:
+  server:
+    port: 0
+  client:
+    GLOBAL:
+      negotiation-type: plaintext
+      default-load-balancing-policy: gray_round_robin
+
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 5000
+        read-timeout: 60000
+        logger-level: FULL
+  sentinel:
+    enabled: true
+  circuitbreaker:
+    enabled: true
+  httpclient:
+    disable-ssl-validation: true
+    follow-redirects: false
+
+spring:
+  cloud:
+    sentinel:
+      eager: true
+      transport:
+        dashboard: 127.0.0.1:8858
+      log:
+        dir: ${SENTINEL_ROOT:${java.io.tmpdir}}/${spring.application.name}/csp
+      datasource:
+        nacos:
+          serverAddr: 127.0.0.1:8848
+        flow-ds:
+          nacos:
+            dataId: ${spring.application.name}-flow
+            ruleType: flow
+            namespace: public
+        degrade-ds:
+          nacos:
+            dataId: ${spring.application.name}-degrade
+            ruleType: degrade
+            namespace: public
+        param-flow-ds:
+          nacos:
+            dataId: ${spring.application.name}-param-flow
+            ruleType: param-flow
+            namespace: public
+        system-ds:
+          nacos:
+            dataId: ${spring.application.name}-system
+            ruleType: system
+            namespace: public
+        authority-ds:
+          nacos:
+            dataId: ${spring.application.name}-authority
+            ruleType: authority
+            namespace: public
+    stream:
+      poller:
+        initial-delay: 10000
+      default-binder: rocketmq
+      bindings:
+        consumeLoginMessage-in-0: #消费短信队列
+          destination: login-message #交换机名称
+          group: ${spring.application.name} #在消费端为队列后缀,生产端无用
+          binder: rocketmq
+          producer:
+            autoStartup: false
+          consumer:
+            autoStartup: true
+      rocketmq:
+        binder:
+          name-server: 127.0.0.1:9876
+          enable-msg-trace: true
+          customized-trace-topic: RMQ_SYS_TRACE_TOPIC
+      function:
+        definition: consumeLoginMessage
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: foobared
+    lettuce:
+      pool:
+        max-active: 500
+        max-wait: 10s
+        min-idle: 5
+        max-idle: 10
+        time-between-eviction-runs: 30m
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/coderd?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: root
+    password: root@123
+    hikari:
+      pool-name: default
+      auto-commit: true
+      minimum-idle: 10
+      maximum-pool-size: 50
+      connection-timeout: 5000
+dubbo:
+  application:
+    name: ${spring.application.name}
+    default: true
+    logger: slf4j
+  registry:
+    id: default
+    address: nacos://127.0.0.1:8848?namespace=public
+    default: true
+    parameters:
+      file: ${DUBBO_ROOT:${java.io.tmpdir}}/${spring.application.name}/dubbo/registry_default.cache
+  protocols:
+    dubbo:
+      name: dubbo
+      default: true
+      port: -1
+      threadname: dubbo
+      threadpool: cached
+      corethreads: 200
+      server: netty4
+      threads: 1000
+      serialization: kryo
+    hessian:
+      name: hessian
+      default: false
+      port: -1
+      threadname: hessian
+      threadpool: cached
+      corethreads: 100
+      threads: 200
+      server: tomcat
+      client: httpclient
+      serialization: native-hessian
+      parameters:
+        "hessian2.request": true
+        "hessian.overload.method": true
+
+  consumer:
+    check: false
+    default: true
+    timeout: 15000
+  provider:
+    protocol: dubbo
+    timeout: 10000
+    validation: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"

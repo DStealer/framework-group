@@ -1,0 +1,64 @@
+server:
+  port: 8085
+  tomcat:
+    basedir: ${WEB_ROOT:${java.io.tmpdir}}/${spring.application.name}/tomcat
+spring:
+  cloud:
+    sentinel:
+      eager: true
+      transport:
+        dashboard: 127.0.0.1:8858
+      log:
+        dir: ${SENTINEL_ROOT:${java.io.tmpdir}}/${spring.application.name}/csp
+      datasource:
+        nacos:
+          serverAddr: 127.0.0.1:8848
+        flow-ds:
+          nacos:
+            dataId: ${spring.application.name}-flow
+            ruleType: flow
+            namespace: public
+        degrade-ds:
+          nacos:
+            dataId: ${spring.application.name}-degrade
+            ruleType: degrade
+            namespace: public
+        param-flow-ds:
+          nacos:
+            dataId: ${spring.application.name}-param-flow
+            ruleType: param-flow
+            namespace: public
+        system-ds:
+          nacos:
+            dataId: ${spring.application.name}-system
+            ruleType: system
+            namespace: public
+        authority-ds:
+          nacos:
+            dataId: ${spring.application.name}-authority
+            ruleType: authority
+            namespace: public
+  jackson:
+    default-property-inclusion: non_null
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - "*"
+dubbo:
+  enabled: false
+
+springdoc:
+  swagger-ui:
+    config-url: /framework-openapi/v3/api-docs/swagger-config
+    urls:
+      - name: framework-gateway
+        url: /framework-openapi/v3/api-docs-ext/framework-gateway
+      - name: framework-sample-consumer
+        url: /framework-openapi/v3/api-docs-ext/framework-sample-consumer
+      - name: framework-sample-provider
+        url: /framework-openapi/v3/api-docs-ext/framework-sample-provider
+grpc:
+  server:
+    port: -1
