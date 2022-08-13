@@ -48,8 +48,8 @@ public class MybatisPageHelper {
             pageResult.setTotalPage(page.getPages());
         } else {
             pageResult.setPageIndex(1L);
-            pageResult.setPageSize(page.getRecords().size());
-            pageResult.setTotalSize(page.getRecords().size());
+            pageResult.setPageSize((long) page.getRecords().size());
+            pageResult.setTotalSize((long) page.getRecords().size());
             pageResult.setTotalPage(1L);
         }
         pageResult.setRecords(page.getRecords());
@@ -72,8 +72,8 @@ public class MybatisPageHelper {
             pageResult.setTotalPage(page.getPages());
         } else {
             pageResult.setPageIndex(1L);
-            pageResult.setPageSize(data.size());
-            pageResult.setTotalSize(data.size());
+            pageResult.setPageSize((long) data.size());
+            pageResult.setTotalSize((long) data.size());
             pageResult.setTotalPage(1L);
         }
         pageResult.setRecords(data);
@@ -98,8 +98,8 @@ public class MybatisPageHelper {
             pageResult.setTotalPage(page.getPages());
         } else {
             pageResult.setPageIndex(1L);
-            pageResult.setPageSize(data.size());
-            pageResult.setTotalSize(data.size());
+            pageResult.setPageSize((long) data.size());
+            pageResult.setTotalSize((long) data.size());
             pageResult.setTotalPage(1L);
         }
         pageResult.setRecords(data.stream()
