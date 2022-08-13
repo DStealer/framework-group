@@ -26,11 +26,11 @@ public class PageResult<T> implements Serializable {
     /**
      * 一般用于响应前端
      */
-    private String code = "NA";
+    private String code;
     /**
      * 响应消息
      */
-    private String msg = "";
+    private String msg;
     /**
      * 当前页索引
      */
