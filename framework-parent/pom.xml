@@ -225,7 +225,7 @@
                 <!--镜像生成插件-->
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>3.1.4</version>
+                <version>3.2.1</version>
                 <configuration>
                     <allowInsecureRegistries>true</allowInsecureRegistries>
                     <from>
