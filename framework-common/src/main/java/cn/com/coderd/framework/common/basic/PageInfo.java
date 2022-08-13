@@ -29,8 +29,13 @@ public class PageInfo implements Serializable {
     public static final PageInfo DEFAULT = new PageInfo(1L, 20L);
 
     private static final long serialVersionUID = 1847140040968172308L;
-
+    /**
+     * 当前码
+     */
     private Long pageIndex = 1L;
+    /**
+     * 页容量
+     */
     private Long pageSize = 20L;
 
     /**

@@ -1,7 +1,7 @@
 package cn.com.coderd.framework.starter.mybatis;
 
 import cn.com.coderd.framework.common.basic.PageInfo;
-import cn.com.coderd.framework.common.basic.PageList;
+import cn.com.coderd.framework.common.basic.PageResult;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.experimental.UtilityClass;
@@ -39,21 +39,21 @@ public class MybatisPageHelper {
      * @param <E>
      * @return
      */
-    public static <E> PageList<E> with(IPage<E> page) {
-        PageList<E> pageList = new PageList<>();
+    public static <E> PageResult<E> with(IPage<E> page) {
+        PageResult<E> pageResult = new PageResult<>();
         if (page.searchCount()) {
-            pageList.setPageIndex(page.getCurrent());
-            pageList.setPageSize(page.getSize());
-            pageList.setTotalSize(page.getTotal());
-            pageList.setTotalPage(page.getPages());
+            pageResult.setPageIndex(page.getCurrent());
+            pageResult.setPageSize(page.getSize());
+            pageResult.setTotalSize(page.getTotal());
+            pageResult.setTotalPage(page.getPages());
         } else {
-            pageList.setPageIndex(1L);
-            pageList.setPageSize(page.getRecords().size());
-            pageList.setTotalSize(page.getRecords().size());
-            pageList.setTotalPage(1L);
+            pageResult.setPageIndex(1L);
+            pageResult.setPageSize(page.getRecords().size());
+            pageResult.setTotalSize(page.getRecords().size());
+            pageResult.setTotalPage(1L);
         }
-        pageList.setList(page.getRecords());
-        return pageList;
+        pageResult.setRecords(page.getRecords());
+        return pageResult;
     }
 
     /**
@@ -63,21 +63,21 @@ public class MybatisPageHelper {
      * @param <E>
      * @return
      */
-    public static <E> PageList<E> with(IPage<E> page, List<E> data) {
-        PageList<E> pageList = new PageList<>();
+    public static <E> PageResult<E> with(IPage<E> page, List<E> data) {
+        PageResult<E> pageResult = new PageResult<>();
         if (page.searchCount()) {
-            pageList.setPageIndex(page.getCurrent());
-            pageList.setPageSize(page.getSize());
-            pageList.setTotalSize(page.getTotal());
-            pageList.setTotalPage(page.getPages());
+            pageResult.setPageIndex(page.getCurrent());
+            pageResult.setPageSize(page.getSize());
+            pageResult.setTotalSize(page.getTotal());
+            pageResult.setTotalPage(page.getPages());
         } else {
-            pageList.setPageIndex(1L);
-            pageList.setPageSize(data.size());
-            pageList.setTotalSize(data.size());
-            pageList.setTotalPage(1L);
+            pageResult.setPageIndex(1L);
+            pageResult.setPageSize(data.size());
+            pageResult.setTotalSize(data.size());
+            pageResult.setTotalPage(1L);
         }
-        pageList.setList(data);
-        return pageList;
+        pageResult.setRecords(data);
+        return pageResult;
     }
 
     /**
@@ -89,22 +89,22 @@ public class MybatisPageHelper {
      * @param <U>
      * @return
      */
-    public static <E, U> PageList<U> with(IPage<E> page, List<E> data, Function<E, U> function) {
-        PageList<U> pageList = new PageList<>();
+    public static <E, U> PageResult<U> with(IPage<E> page, List<E> data, Function<E, U> function) {
+        PageResult<U> pageResult = new PageResult<>();
         if (page.searchCount()) {
-            pageList.setPageIndex(page.getCurrent());
-            pageList.setPageSize(page.getSize());
-            pageList.setTotalSize(page.getTotal());
-            pageList.setTotalPage(page.getPages());
+            pageResult.setPageIndex(page.getCurrent());
+            pageResult.setPageSize(page.getSize());
+            pageResult.setTotalSize(page.getTotal());
+            pageResult.setTotalPage(page.getPages());
         } else {
-            pageList.setPageIndex(1L);
-            pageList.setPageSize(data.size());
-            pageList.setTotalSize(data.size());
-            pageList.setTotalPage(1L);
+            pageResult.setPageIndex(1L);
+            pageResult.setPageSize(data.size());
+            pageResult.setTotalSize(data.size());
+            pageResult.setTotalPage(1L);
         }
-        pageList.setList(data.stream()
+        pageResult.setRecords(data.stream()
                 .map(function)
                 .collect(Collectors.toList()));
-        return pageList;
+        return pageResult;
     }
 }
