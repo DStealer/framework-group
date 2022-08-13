@@ -142,6 +142,16 @@ public class PageResult<T> implements Serializable {
     }
 
     /**
+     * 泛化类型,仅保留状态码和消息
+     *
+     * @param <E>
+     * @return
+     */
+    public <E> PageResult<E> toGeneric() {
+        return new PageResult<>(this.code, this.msg, null, null, null, null, null, null);
+    }
+
+    /**
      * 获取第一个数据,快捷封装
      *
      * @return
