@@ -147,6 +147,16 @@ public class Result<T> implements Serializable {
         return this.ok() ? this.pageData : other.get();
     }
 
+    /**
+     * 如果成功响应则返回数据,否则使用other替换
+     *
+     * @param other
+     * @return
+     */
+    public Result<T> orElseGetResult(Supplier<Result<T>> other) {
+        return this.ok() ? this : other.get();
+    }
+
 
     /**
      * 抛出异常或者返回数据
