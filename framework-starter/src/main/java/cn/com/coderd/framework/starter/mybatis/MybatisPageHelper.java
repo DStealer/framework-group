@@ -2,7 +2,6 @@ package cn.com.coderd.framework.starter.mybatis;
 
 import cn.com.coderd.framework.common.basic.PageData;
 import cn.com.coderd.framework.common.basic.PageInfo;
-import cn.com.coderd.framework.common.basic.PageResult;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.experimental.UtilityClass;
@@ -63,32 +62,6 @@ public class MybatisPageHelper {
      * @param <E>
      * @return
      */
-    public static <E> PageResult<E> withPageResult(IPage<E> page) {
-        PageResult<E> pageResult = new PageResult<>();
-        pageResult.setCode("NA");
-        pageResult.setMsg("操作成功");
-        if (page.searchCount()) {
-            pageResult.setPageIndex(page.getCurrent());
-            pageResult.setPageSize(page.getSize());
-            pageResult.setTotalPage(page.getPages());
-            pageResult.setTotalSize(page.getTotal());
-        } else {
-            pageResult.setPageIndex(1L);
-            pageResult.setPageSize((long) page.getRecords().size());
-            pageResult.setTotalPage(1L);
-            pageResult.setTotalSize((long) page.getRecords().size());
-        }
-        pageResult.setRecords(page.getRecords());
-        return pageResult;
-    }
-
-    /**
-     * 从mybatis转换
-     *
-     * @param page
-     * @param <E>
-     * @return
-     */
     public static <E> PageData<E> withPageData(IPage<E> page) {
         PageData<E> pageData = new PageData<>();
         if (page.searchCount()) {
@@ -104,36 +77,6 @@ public class MybatisPageHelper {
         }
         pageData.setRecords(page.getRecords());
         return pageData;
-    }
-
-    /**
-     * 从mybatis转换
-     *
-     * @param page
-     * @param function
-     * @param <E>
-     * @param <U>
-     * @return
-     */
-    public static <E, U> PageResult<U> withPageResult(IPage<E> page, Function<E, U> function) {
-        PageResult<U> pageResult = new PageResult<>();
-        pageResult.setCode("NA");
-        pageResult.setMsg("操作成功");
-        if (page.searchCount()) {
-            pageResult.setPageIndex(page.getCurrent());
-            pageResult.setPageSize(page.getSize());
-            pageResult.setTotalSize(page.getTotal());
-            pageResult.setTotalPage(page.getPages());
-        } else {
-            pageResult.setPageIndex(1L);
-            pageResult.setPageSize((long) page.getRecords().size());
-            pageResult.setTotalSize((long) page.getRecords().size());
-            pageResult.setTotalPage(1L);
-        }
-        pageResult.setRecords(page.getRecords().stream()
-                .map(function)
-                .collect(Collectors.toList()));
-        return pageResult;
     }
 
     /**
