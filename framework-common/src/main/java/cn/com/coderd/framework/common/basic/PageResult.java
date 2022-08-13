@@ -91,19 +91,7 @@ public class PageResult<T> implements Serializable {
      * @return
      */
     public static <E> PageResult<E> with(Long pageIndex, Long pageSize, Long totalSize, List<E> records) {
-        PageResult<E> pageResult = new PageResult<>();
-        pageResult.setCode("NA");
-        pageResult.setMsg("操作成功");
-        pageResult.setRecords(records);
-        pageResult.setPageIndex(pageIndex);
-        pageResult.setPageSize(pageSize);
-        pageResult.setTotalSize(totalSize);
-        if (pageSize > 0) {
-            pageResult.setTotalPage(totalSize / pageSize + (totalSize % pageSize == 0L ? 0L : 1L));
-        } else {
-            pageResult.setTotalPage(totalSize);
-        }
-        return pageResult;
+        return with("NA", "操作成功", pageIndex, pageSize, totalSize, records);
     }
 
     /**
