@@ -1,5 +1,6 @@
 package cn.com.coderd.framework.starter.mybatis;
 
+import cn.com.coderd.framework.common.basic.PageData;
 import cn.com.coderd.framework.common.basic.PageInfo;
 import cn.com.coderd.framework.common.basic.PageResult;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -38,7 +39,7 @@ public class MybatisPageHelper {
      * @param <E>
      * @return
      */
-    public static <E> PageResult<E> with(IPage<E> page) {
+    public static <E> PageResult<E> withPageResult(IPage<E> page) {
         PageResult<E> pageResult = new PageResult<>();
         pageResult.setCode("NA");
         pageResult.setMsg("操作成功");
@@ -61,12 +62,36 @@ public class MybatisPageHelper {
      * 从mybatis转换
      *
      * @param page
+     * @param <E>
+     * @return
+     */
+    public static <E> PageData<E> withPageData(IPage<E> page) {
+        PageData<E> pageData = new PageData<>();
+        if (page.searchCount()) {
+            pageData.setPageIndex(page.getCurrent());
+            pageData.setPageSize(page.getSize());
+            pageData.setTotalPage(page.getPages());
+            pageData.setTotalSize(page.getTotal());
+        } else {
+            pageData.setPageIndex(1L);
+            pageData.setPageSize((long) page.getRecords().size());
+            pageData.setTotalPage(1L);
+            pageData.setTotalSize((long) page.getRecords().size());
+        }
+        pageData.setRecords(page.getRecords());
+        return pageData;
+    }
+
+    /**
+     * 从mybatis转换
+     *
+     * @param page
      * @param function
      * @param <E>
      * @param <U>
      * @return
      */
-    public static <E, U> PageResult<U> with(IPage<E> page, Function<E, U> function) {
+    public static <E, U> PageResult<U> withPageResult(IPage<E> page, Function<E, U> function) {
         PageResult<U> pageResult = new PageResult<>();
         pageResult.setCode("NA");
         pageResult.setMsg("操作成功");
@@ -85,5 +110,33 @@ public class MybatisPageHelper {
                 .map(function)
                 .collect(Collectors.toList()));
         return pageResult;
+    }
+
+    /**
+     * 从mybatis转换
+     *
+     * @param page
+     * @param function
+     * @param <E>
+     * @param <U>
+     * @return
+     */
+    public static <E, U> PageData<U> withPageData(IPage<E> page, Function<E, U> function) {
+        PageData<U> pageData = new PageData<>();
+        if (page.searchCount()) {
+            pageData.setPageIndex(page.getCurrent());
+            pageData.setPageSize(page.getSize());
+            pageData.setTotalSize(page.getTotal());
+            pageData.setTotalPage(page.getPages());
+        } else {
+            pageData.setPageIndex(1L);
+            pageData.setPageSize((long) page.getRecords().size());
+            pageData.setTotalSize((long) page.getRecords().size());
+            pageData.setTotalPage(1L);
+        }
+        pageData.setRecords(page.getRecords().stream()
+                .map(function)
+                .collect(Collectors.toList()));
+        return pageData;
     }
 }
