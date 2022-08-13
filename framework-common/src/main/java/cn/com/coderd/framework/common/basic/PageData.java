@@ -45,7 +45,7 @@ public class PageData<T> implements Serializable {
     /**
      * 额外信息
      */
-    private Map<String, Object> additional;
+    private Map<String, Object> extras;
 
     /**
      * 通过分页参数控制
@@ -112,7 +112,7 @@ public class PageData<T> implements Serializable {
         pageResult.setRecords(this.records.stream()
                 .map(converter)
                 .collect(Collectors.toList()));
-        pageResult.setAdditional(this.additional);
+        pageResult.setExtras(this.extras);
         return pageResult;
     }
 }
