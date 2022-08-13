@@ -114,7 +114,7 @@ public class Result<T> implements Serializable {
     }
 
     /**
-     * 如果是成功响应,则进行类型转换
+     * 进行类型转换
      *
      * @param mapper
      * @param <E>
