@@ -136,6 +136,8 @@ public class PageResult<T> implements Serializable {
      */
     public <U> PageResult<U> map(Function<? super T, ? extends U> converter) {
         PageResult<U> pageResult = new PageResult<>();
+        pageResult.setCode(this.code);
+        pageResult.setMsg(this.msg);
         pageResult.setPageIndex(this.pageIndex);
         pageResult.setPageSize(this.pageSize);
         pageResult.setTotalPage(this.totalPage);
