@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -51,6 +53,17 @@ public class PageData<T> implements Serializable {
      * 通过分页参数控制
      *
      * @param pageInfo
+     * @param <E>
+     * @return
+     */
+    public static <E> PageData<E> with(PageInfo<?> pageInfo) {
+        return with(pageInfo.getPageIndex(), pageInfo.getSize(), 0L, Collections.emptyList());
+    }
+
+    /**
+     * 通过分页参数控制
+     *
+     * @param pageInfo
      * @param totalSize
      * @param records
      * @param <E>
@@ -85,11 +98,26 @@ public class PageData<T> implements Serializable {
     }
 
     /**
+     * 设置额外信息
+     *
+     * @param key
+     * @param value
+     * @return
+     */
+    public Map<String, Object> addExtra(String key, Object value) {
+        if (this.extras == null) {
+            this.extras = new HashMap<>();
+        }
+        this.extras.put(key, value);
+        return this.extras;
+    }
+
+    /**
      * 获取第一个数据,快捷封装
      *
      * @return
      */
-    public T one() {
+    public T first() {
         if (this.records == null || this.records.isEmpty()) {
             return null;
         }
