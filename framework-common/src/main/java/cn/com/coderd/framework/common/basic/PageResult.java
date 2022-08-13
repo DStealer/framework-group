@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -55,17 +54,6 @@ public class PageResult<T> implements Serializable {
      * 额外信息
      */
     private Map<String, Object> additional;
-
-    /**
-     * 通过分页参数控制
-     *
-     * @param pageInfo
-     * @param <E>
-     * @return
-     */
-    public static <E> PageResult<E> withEmpty(PageInfo pageInfo) {
-        return with(pageInfo.getPageIndex(), pageInfo.getSize(), 0L, Collections.emptyList());
-    }
 
     /**
      * 通过分页参数控制
