@@ -38,6 +38,6 @@ public class ResultRuntimeException extends RuntimeException {
     }
 
     public Result<?> toResult() {
-        return new Result<>(this.statusCode, this.statusMessage, null);
+        return new Result<>(this.statusCode, this.statusMessage, null, null);
     }
 }

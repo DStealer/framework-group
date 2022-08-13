@@ -38,7 +38,7 @@ public class ResultException extends Exception {
     }
 
     public Result<?> toResult() {
-        return new Result<>(this.statusCode, this.statusMessage, null);
+        return new Result<>(this.statusCode, this.statusMessage, null, null);
     }
 
 }
