@@ -63,9 +63,8 @@ public class PageResult<T> implements Serializable {
      * @param <E>
      * @return
      */
-    @SuppressWarnings("unchecked")
     public static <E> PageResult<E> withEmpty(PageInfo pageInfo) {
-        return with(pageInfo.getPageIndex(), pageInfo.getSize(), 0L, Collections.EMPTY_LIST);
+        return with(pageInfo.getPageIndex(), pageInfo.getSize(), 0L, Collections.emptyList());
     }
 
     /**
@@ -73,12 +72,12 @@ public class PageResult<T> implements Serializable {
      *
      * @param pageInfo
      * @param totalSize
-     * @param data
+     * @param records
      * @param <E>
      * @return
      */
-    public static <E> PageResult<E> with(PageInfo pageInfo, long totalSize, List<E> data) {
-        return with(pageInfo.getPageIndex(), pageInfo.getSize(), totalSize, data);
+    public static <E> PageResult<E> with(PageInfo pageInfo, long totalSize, List<E> records) {
+        return with(pageInfo.getPageIndex(), pageInfo.getSize(), totalSize, records);
     }
 
     /**
@@ -87,13 +86,13 @@ public class PageResult<T> implements Serializable {
      * @param pageIndex
      * @param pageSize
      * @param totalSize
-     * @param data
+     * @param records
      * @param <E>
      * @return
      */
-    public static <E> PageResult<E> with(long pageIndex, long pageSize, long totalSize, List<E> data) {
+    public static <E> PageResult<E> with(long pageIndex, long pageSize, long totalSize, List<E> records) {
         PageResult<E> pageResult = new PageResult<>();
-        pageResult.setRecords(data);
+        pageResult.setRecords(records);
         pageResult.setPageIndex(pageIndex);
         pageResult.setPageSize(pageSize);
         pageResult.setTotalSize(totalSize);
