@@ -76,7 +76,7 @@ public class PageResult<T> implements Serializable {
      * @param <E>
      * @return
      */
-    public static <E> PageResult<E> with(PageInfo pageInfo, long totalSize, List<E> records) {
+    public static <E> PageResult<E> with(PageInfo pageInfo, Long totalSize, List<E> records) {
         return with(pageInfo.getPageIndex(), pageInfo.getSize(), totalSize, records);
     }
 
@@ -90,8 +90,10 @@ public class PageResult<T> implements Serializable {
      * @param <E>
      * @return
      */
-    public static <E> PageResult<E> with(long pageIndex, long pageSize, long totalSize, List<E> records) {
+    public static <E> PageResult<E> with(Long pageIndex, Long pageSize, Long totalSize, List<E> records) {
         PageResult<E> pageResult = new PageResult<>();
+        pageResult.setCode("NA");
+        pageResult.setMsg("操作成功");
         pageResult.setRecords(records);
         pageResult.setPageIndex(pageIndex);
         pageResult.setPageSize(pageSize);
@@ -105,12 +107,21 @@ public class PageResult<T> implements Serializable {
     }
 
     /**
+     * 判断请求是否成功
+     *
+     * @return
+     */
+    public boolean ok() {
+        return this.code != null && this.code.equals("NA");
+    }
+
+    /**
      * 获取第一个数据,快捷封装
      *
      * @return
      */
     public T one() {
-        if (this.records == null || this.records.isEmpty()) {
+        if (!this.ok() || this.records == null || this.records.isEmpty()) {
             return null;
         }
         return this.records.get(0);
