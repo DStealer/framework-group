@@ -107,6 +107,34 @@ public class PageResult<T> implements Serializable {
     }
 
     /**
+     * 通过分页参数控制
+     *
+     * @param code
+     * @param message
+     * @param pageIndex
+     * @param pageSize
+     * @param totalSize
+     * @param records
+     * @param <E>
+     * @return
+     */
+    public static <E> PageResult<E> with(String code, String message, Long pageIndex, Long pageSize, Long totalSize, List<E> records) {
+        PageResult<E> pageResult = new PageResult<>();
+        pageResult.setCode(code);
+        pageResult.setMsg(message);
+        pageResult.setRecords(records);
+        pageResult.setPageIndex(pageIndex);
+        pageResult.setPageSize(pageSize);
+        pageResult.setTotalSize(totalSize);
+        if (pageSize > 0) {
+            pageResult.setTotalPage(totalSize / pageSize + (totalSize % pageSize == 0L ? 0L : 1L));
+        } else {
+            pageResult.setTotalPage(totalSize);
+        }
+        return pageResult;
+    }
+
+    /**
      * 失败响应结果
      *
      * @param code 响应码
