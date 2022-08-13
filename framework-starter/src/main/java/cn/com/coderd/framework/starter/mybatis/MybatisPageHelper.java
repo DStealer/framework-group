@@ -23,13 +23,37 @@ public class MybatisPageHelper {
      * @return
      */
     public static <T, P extends PageInfo<?>> IPage<T> toPage(P pageInfo) {
-        Page<T> page = new Page<>();
-        page.setCurrent(pageInfo.getPageIndex());
-        page.setSize(pageInfo.getPageSize());
-        page.setSearchCount(pageInfo.getPageIndex().compareTo(1L) != 0
-                || pageInfo.getPageSize().compareTo(-1L) != 0);
-        page.setOptimizeCountSql(true);
-        return page;
+        if (pageInfo.getPageIndex() == null || pageInfo.getPageSize() == null) {
+            Page<T> page = new Page<>();
+            page.setCurrent(PageInfo.DEFAULT.getPageIndex());
+            page.setSize(PageInfo.DEFAULT.getPageSize());
+            page.setSearchCount(true);
+            page.setOptimizeCountSql(true);
+            return page;
+        } else if (PageInfo.NO_LIMIT.getPageIndex().equals(pageInfo.getPageIndex())
+                && PageInfo.NO_LIMIT.getPageSize().equals(pageInfo.getPageSize())) {
+            Page<T> page = new Page<>();
+            page.setCurrent(1L);
+            page.setSize(Long.MAX_VALUE);
+            page.setSearchCount(false);
+            page.setOptimizeCountSql(false);
+            return page;
+        } else if (PageInfo.NO_DATA.getPageIndex().equals(pageInfo.getPageIndex())
+                && PageInfo.NO_DATA.getPageSize().equals(pageInfo.getPageSize())) {
+            Page<T> page = new Page<>();
+            page.setCurrent(1L);
+            page.setSize(0);
+            page.setSearchCount(true);
+            page.setOptimizeCountSql(true);
+            return page;
+        } else {
+            Page<T> page = new Page<>();
+            page.setCurrent(pageInfo.getPageIndex());
+            page.setSize(pageInfo.getPageSize());
+            page.setSearchCount(true);
+            page.setOptimizeCountSql(true);
+            return page;
+        }
     }
 
     /**
