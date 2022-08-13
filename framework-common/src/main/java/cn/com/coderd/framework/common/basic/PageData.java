@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,8 +55,8 @@ public class PageData<T> implements Serializable {
      * @param <E>
      * @return
      */
-    public static <E> PageData<E> with(PageInfo<?> pageInfo) {
-        return with(pageInfo.getPageIndex(), pageInfo.getSize(), 0L, Collections.emptyList());
+    public static <E> PageData<E> with(PageInfo<?> pageInfo, List<E> records) {
+        return with(pageInfo.getPageIndex(), pageInfo.getSize(), (long) records.size(), records);
     }
 
     /**
