@@ -66,6 +66,7 @@ public class Result<T> implements Serializable {
     public static <T> Result<T> ok(T data) {
         return new Result<>("NA", "操作成功", data);
     }
+
     /**
      * 成功响应结果
      *
@@ -109,14 +110,14 @@ public class Result<T> implements Serializable {
     }
 
     /**
-     * 如果是成功响应,则进行类型转换,否则置空data并返回自身
+     * 如果是成功响应,则进行类型转换
      *
      * @param mapper
      * @param <E>
      * @return
      */
     @SuppressWarnings("unchecked")
-    public <E> Result<E> mapResultIfOk(Function<T, E> mapper) {
+    public <E> Result<E> mapResult(Function<T, E> mapper) {
         if (this.ok()) {
             return new Result<>(this.code, this.msg, mapper.apply(this.data));
         } else {
@@ -126,7 +127,7 @@ public class Result<T> implements Serializable {
     }
 
     /**
-     * 如果成功响应则返回自身,否则使用other替换
+     * 如果成功响应则返回数据,否则使用other替换
      *
      * @param other
      * @return
@@ -136,7 +137,17 @@ public class Result<T> implements Serializable {
     }
 
     /**
-     * 抛出异常或者返回自身
+     * 如果成功响应则返回,否则使用other替换
+     *
+     * @param other
+     * @return
+     */
+    public Result<T> orElseGetResult(Supplier<Result<T>> other) {
+        return this.ok() ? this : other.get();
+    }
+
+    /**
+     * 抛出异常或者返回数据
      *
      * @return
      */
@@ -149,7 +160,7 @@ public class Result<T> implements Serializable {
     }
 
     /**
-     * 抛出异常或者返回自身
+     * 抛出异常或者返回数据
      *
      * @return
      */
@@ -158,19 +169,6 @@ public class Result<T> implements Serializable {
             return this.getData();
         } else {
             throw supplier.get();
-        }
-    }
-
-    /**
-     * 抛出异常或者返回自身
-     *
-     * @return
-     */
-    public T orElseThrow(Function<Result<T>, ? extends RuntimeException> mapper) {
-        if (this.ok()) {
-            return this.getData();
-        } else {
-            throw mapper.apply(this);
         }
     }
 }

@@ -38,6 +38,6 @@ public class LoginControllerImpl implements LoginController {
                 .setUsername(request.getUsername())
                 .setPassword(request.getPassword()));
 
-        return result.mapResultIfOk(e -> new LoginResponse().setToken("abc"));
+        return result.mapResult(e -> new LoginResponse().setToken("abc"));
     }
 }
