@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.experimental.UtilityClass;
 
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -41,42 +40,20 @@ public class MybatisPageHelper {
      */
     public static <E> PageResult<E> with(IPage<E> page) {
         PageResult<E> pageResult = new PageResult<>();
+        pageResult.setCode("NA");
+        pageResult.setMsg("操作成功");
         if (page.searchCount()) {
             pageResult.setPageIndex(page.getCurrent());
             pageResult.setPageSize(page.getSize());
-            pageResult.setTotalSize(page.getTotal());
             pageResult.setTotalPage(page.getPages());
+            pageResult.setTotalSize(page.getTotal());
         } else {
             pageResult.setPageIndex(1L);
             pageResult.setPageSize((long) page.getRecords().size());
-            pageResult.setTotalSize((long) page.getRecords().size());
             pageResult.setTotalPage(1L);
+            pageResult.setTotalSize((long) page.getRecords().size());
         }
         pageResult.setRecords(page.getRecords());
-        return pageResult;
-    }
-
-    /**
-     * 从mybatis转换
-     *
-     * @param page
-     * @param <E>
-     * @return
-     */
-    public static <E> PageResult<E> with(IPage<E> page, List<E> data) {
-        PageResult<E> pageResult = new PageResult<>();
-        if (page.searchCount()) {
-            pageResult.setPageIndex(page.getCurrent());
-            pageResult.setPageSize(page.getSize());
-            pageResult.setTotalSize(page.getTotal());
-            pageResult.setTotalPage(page.getPages());
-        } else {
-            pageResult.setPageIndex(1L);
-            pageResult.setPageSize((long) data.size());
-            pageResult.setTotalSize((long) data.size());
-            pageResult.setTotalPage(1L);
-        }
-        pageResult.setRecords(data);
         return pageResult;
     }
 
@@ -89,8 +66,10 @@ public class MybatisPageHelper {
      * @param <U>
      * @return
      */
-    public static <E, U> PageResult<U> with(IPage<E> page, List<E> data, Function<E, U> function) {
+    public static <E, U> PageResult<U> with(IPage<E> page, Function<E, U> function) {
         PageResult<U> pageResult = new PageResult<>();
+        pageResult.setCode("NA");
+        pageResult.setMsg("操作成功");
         if (page.searchCount()) {
             pageResult.setPageIndex(page.getCurrent());
             pageResult.setPageSize(page.getSize());
@@ -98,11 +77,11 @@ public class MybatisPageHelper {
             pageResult.setTotalPage(page.getPages());
         } else {
             pageResult.setPageIndex(1L);
-            pageResult.setPageSize((long) data.size());
-            pageResult.setTotalSize((long) data.size());
+            pageResult.setPageSize((long) page.getRecords().size());
+            pageResult.setTotalSize((long) page.getRecords().size());
             pageResult.setTotalPage(1L);
         }
-        pageResult.setRecords(data.stream()
+        pageResult.setRecords(page.getRecords().stream()
                 .map(function)
                 .collect(Collectors.toList()));
         return pageResult;
