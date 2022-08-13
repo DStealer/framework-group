@@ -27,7 +27,7 @@
         <commons.fileupload.version>1.4</commons.fileupload.version>
         <jasypt.spring.boot.starter.version>3.0.4</jasypt.spring.boot.starter.version>
 
-        <dubbo.spring.boot.starter.version>2.7.8</dubbo.spring.boot.starter.version>
+        <dubbo.spring.boot.starter.version>3.0.6</dubbo.spring.boot.starter.version>
         <kryo.serializers.version>0.42</kryo.serializers.version>
         <hessian.version>4.0.65</hessian.version>
 
