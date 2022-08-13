@@ -14,19 +14,19 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class PageInfo implements Serializable {
+public class PageInfo<T extends PageInfo<?>> implements Serializable {
     /**
      * 不查询数据,只返回符合条件的数据数量
      */
-    public static final PageInfo NO_DATA = new PageInfo(1L, 0L);
+    public static final PageInfo<?> NO_DATA = new PageInfo<>(1L, 0L);
     /**
      * 一次查询所有数据
      */
-    public static final PageInfo NO_LIMIT = new PageInfo(1L, Long.MAX_VALUE);
+    public static final PageInfo<?> NO_LIMIT = new PageInfo<>(1L, -1L);
     /**
      * 默认值,每页查询20条数据
      */
-    public static final PageInfo DEFAULT = new PageInfo(1L, 20L);
+    public static final PageInfo<?> DEFAULT = new PageInfo<>(1L, 20L);
 
     private static final long serialVersionUID = 1847140040968172308L;
     /**

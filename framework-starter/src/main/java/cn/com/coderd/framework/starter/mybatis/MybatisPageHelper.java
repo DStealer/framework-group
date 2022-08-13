@@ -22,12 +22,12 @@ public class MybatisPageHelper {
      * @param <T>
      * @return
      */
-    public static <T> IPage<T> toPage(PageInfo pageInfo) {
+    public static <T, P extends PageInfo<?>> IPage<T> toPage(P pageInfo) {
         Page<T> page = new Page<>();
         page.setCurrent(pageInfo.getPageIndex());
         page.setSize(pageInfo.getPageSize());
         page.setSearchCount(pageInfo.getPageIndex().compareTo(1L) != 0
-                || pageInfo.getPageSize().compareTo(Long.MAX_VALUE) != 0);
+                || pageInfo.getPageSize().compareTo(-1L) != 0);
         page.setOptimizeCountSql(true);
         return page;
     }
