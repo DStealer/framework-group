@@ -107,6 +107,28 @@ public class PageResult<T> implements Serializable {
     }
 
     /**
+     * 失败响应结果
+     *
+     * @param code 响应码
+     * @param msg  响应消息
+     * @return
+     */
+    public static <T> PageResult<T> fail(String code, String msg) {
+        return new PageResult<>(code, msg, null, null, null, null, null, null);
+    }
+
+    /**
+     * 自定义响应
+     *
+     * @param code
+     * @param <T>
+     * @return
+     */
+    public static <T> PageResult<T> custom(String code, String msg) {
+        return new PageResult<>(code, msg, null, null, null, null, null, null);
+    }
+
+    /**
      * 判断请求是否成功
      *
      * @return
