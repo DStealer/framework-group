@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
     public Result<Object> handleResultException(ResultException ex) {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         log.error("Handle ResultException on :{}", requestAttributes.getRequest().getRequestURI(), ex);
-        return Result.custom(ex.getStatusCode(), ex.getStatusMessage(), null);
+        return Result.custom(ex.getStatusCode(), ex.getStatusMessage(), null, null);
     }
 
     /**
@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
     public Result<Object> handleResultRuntimeException(ResultRuntimeException ex) {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         log.error("Handle ResultRuntimeException on :{}", requestAttributes.getRequest().getRequestURI(), ex);
-        return Result.custom(ex.getStatusCode(), ex.getStatusMessage(), null);
+        return Result.custom(ex.getStatusCode(), ex.getStatusMessage(), null, null);
     }
 
     /**
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
     public Result<Object> handleResultRuntimeException(ApplicationException ex) {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         log.error("Handle ApplicationException on :{}", requestAttributes.getRequest().getRequestURI(), ex);
-        return Result.custom("GA000002", "应用异常请稍后重试", null);
+        return Result.custom("GA000002", "应用异常请稍后重试", null, null);
     }
 
     /**
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
     public Result<Object> handleResultRuntimeException(ApplicationRuntimeException ex) {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         log.error("Handle ApplicationRuntimeException on :{}", requestAttributes.getRequest().getRequestURI(), ex);
-        return Result.custom("GA000003", "应用异常请稍后重试", null);
+        return Result.custom("GA000003", "应用异常请稍后重试", null, null);
     }
 
     /**
@@ -94,7 +94,7 @@ public class GlobalExceptionHandler {
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .orElse("数据校验错误");
         log.error("Handle method argument not valid exception on :{}-{}", requestAttributes.getRequest().getRequestURI(), errorMessage);
-        return Result.custom("GA000001", errorMessage, null);
+        return Result.custom("GA000001", errorMessage, null, null);
     }
 
     /**
@@ -108,7 +108,7 @@ public class GlobalExceptionHandler {
     public Result<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         log.error("Handle illegal argument exception on :{}-{}", requestAttributes.getRequest().getRequestURI(), ex.getMessage());
-        return Result.custom("GA000001", ex.getMessage(), null);
+        return Result.custom("GA000001", ex.getMessage(), null, null);
     }
 
     /**
@@ -124,9 +124,9 @@ public class GlobalExceptionHandler {
         ResultException rex = ExceptionUtils.throwableOfType(ex, ResultException.class);
         if (rex != null) {
             log.error("Handle BizException on :{}, exception: {}", requestAttributes.getRequest().getRequestURI(), ex);
-            return Result.custom(rex.getStatusCode(), rex.getStatusMessage(), null);
+            return Result.custom(rex.getStatusCode(), rex.getStatusMessage(), null, null);
         }
         log.error("Handle unknown exception on :{} exception: {}", requestAttributes.getRequest().getRequestURI(), ex);
-        return Result.custom("GA999999", "未预期异常,请联系项目管理人员", null);
+        return Result.custom("GA999999", "未预期异常,请联系项目管理人员", null, null);
     }
 }
