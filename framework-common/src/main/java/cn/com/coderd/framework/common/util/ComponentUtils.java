@@ -1,9 +1,19 @@
 package cn.com.coderd.framework.common.util;
 
+import cn.com.coderd.framework.common.support.EnumVO;
 import lombok.experimental.UtilityClass;
+
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @UtilityClass
 public class ComponentUtils {
+    private static final Map<Object, Object> ENUM_HASHMAP = new ConcurrentHashMap<>();
 
     /**
      * 分解从0到max的前后区间
@@ -129,5 +139,40 @@ public class ComponentUtils {
     public static String trimTrunc(String str, int maxLen) {
         return str == null ? null : str.length() <= maxLen
                 ? str.trim() : str.substring(0, maxLen).trim() + "...";
+    }
+
+    /**
+     * 获取枚举类型所有实例
+     *
+     * @param tClass
+     * @param <T>
+     * @param <K>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Enum<T>, K> List<T> values(Class<T> tClass) {
+        return (List<T>) ENUM_HASHMAP.computeIfAbsent(tClass, k -> {
+            try {
+                Field valuesField = tClass.getDeclaredField("$VALUES");
+                valuesField.setAccessible(true);
+                T[] values = (T[]) valuesField.get(tClass);
+                return Arrays.stream(values).collect(Collectors.toList());
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    /**
+     * 转化枚举类型
+     *
+     * @param tClass
+     * @param function
+     * @param <T>
+     * @param <K>
+     * @return
+     */
+    public static <T extends Enum<T>, K> List<EnumVO> valueToEnumVOs(Class<T> tClass, Function<T, EnumVO> function) {
+        return values(tClass).stream().map(function).collect(Collectors.toList());
     }
 }
