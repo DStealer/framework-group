@@ -123,7 +123,7 @@ public class SecurityChecker implements InitializingBean {
                 }
             }
         }
-        return Result.ok(null);
+        return Result.ok(null, null);
     }
 
     public String toJsonPoint(JsonStreamContext context) {
