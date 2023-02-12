@@ -1,8 +1,13 @@
 package cn.com.coderd.framework.gateway.codec;
 
 import cn.com.coderd.framework.gateway.config.KeySpec;
-import cn.com.coderd.framework.gateway.constants.MediaTypeConstants;
 import cn.com.coderd.framework.gateway.utils.ComponentUtils;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -15,7 +20,10 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
 
 import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
@@ -24,14 +32,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * jsonx消息转换实现,适用场景 使用非对称加密,适用用于请求和响应数据量不大的情况,典型场景 app端请求
+ * jsonm消息转换实现,该加密使用对称加密加密消息体,使用非对称加密加密密钥,适用请求和响应体较大的情况,典型场景 web端请求
  */
 @Slf4j
-public class JsonxMessageEncryptor extends MessageEncryptor {
-    private static final String ALGO = "RSA";
+public class JsonXMessageEncryptor extends MessageEncryptor {
+    /**
+     * JSONX 媒体类型
+     */
+    public static final MediaType MEDIA_TYPE_JSONX = new MediaType("application", "jsonx");
+    private static final String AES_ALGO = "AES";
+    private static final String RSA_ALGO = "RSA";
+    private final ObjectMapper mapper = JsonMapper.builder()
+            .serializationInclusion(JsonInclude.Include.NON_NULL)
+            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+            .build();
     private transient final Map<String, KeyPair> keySpecs;
 
-    public JsonxMessageEncryptor(Map<String, KeySpec> keySpecs) {
+    public JsonXMessageEncryptor(Map<String, KeySpec> keySpecs) {
         Assert.notNull(keySpecs, "密钥不可为null");
         this.keySpecs = this.init(keySpecs);
     }
@@ -40,7 +57,7 @@ public class JsonxMessageEncryptor extends MessageEncryptor {
         Map<String, KeyPair> keyPairMap = new HashMap<>(keySpecs.size());
         try {
             for (Map.Entry<String, KeySpec> entry : keySpecs.entrySet()) {
-                KeyFactory keyFactory = KeyFactory.getInstance(ALGO);
+                KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGO);
                 X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(Base64.decode(entry.getValue().getPublicKey()));
                 PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
                 PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(Base64.decode(entry.getValue().getPrivateKey()));
@@ -57,7 +74,7 @@ public class JsonxMessageEncryptor extends MessageEncryptor {
 
     @Override
     public boolean supportRequest(HttpHeaders headers) {
-        return MediaTypeConstants.MEDIA_TYPE_JSONX.isCompatibleWith(headers.getContentType());
+        return MEDIA_TYPE_JSONX.isCompatibleWith(headers.getContentType());
     }
 
     @Override
@@ -83,23 +100,28 @@ public class JsonxMessageEncryptor extends MessageEncryptor {
                 .filter(e -> !HttpHeaders.CONTENT_LENGTH.equals(e.getKey()))
                 .filter(e -> !HttpHeaders.CONTENT_TYPE.equals(e.getKey()))
                 .forEach(e -> filtered.put(e.getKey(), e.getValue()));
-        filtered.setContentType(MediaTypeConstants.MEDIA_TYPE_JSONM);
+        filtered.setContentType(MEDIA_TYPE_JSONX);
         return filtered;
     }
 
     @Override
     public DataBuffer encrypt(ServerWebExchange exchange, DataBuffer buffer) {
         try {
-            String message = buffer.toString(ComponentUtils.getCharsetOrUTF8(exchange.getResponse().getHeaders()));
-            byte[] plainTextData = message.getBytes(ComponentUtils.getCharsetOrUTF8(exchange.getResponse().getHeaders()));
+            Charset charset = ComponentUtils.getCharsetOrUTF8(exchange.getResponse().getHeaders());
+            String message = buffer.toString(charset);
             log.info("write:{} token:{} body:{}", exchange.getRequest().getURI().getPath(), exchange.getLogPrefix(), message);
-            // 这里可以根据客户端请特征选择密钥的逻辑,典型场景,例如密钥更换,多账号等逻辑
-            PublicKey publicKey = keySpecs.get("default").getPublic();
-            Cipher cipher = Cipher.getInstance(ALGO);
-            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-            DataBuffer dataBuffer = exchange.getResponse().bufferFactory().allocateBuffer();
-            dataBuffer.write(cipher.doFinal(plainTextData));
-            return dataBuffer;
+            byte[] aesKeyBytes = ComponentUtils.randomString(16).getBytes(StandardCharsets.UTF_8);
+            Cipher aesCipher = Cipher.getInstance(AES_ALGO);
+            SecretKey secretKey = new SecretKeySpec(aesKeyBytes, 0, aesKeyBytes.length, AES_ALGO);
+            aesCipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            String data = Base64.toBase64String(aesCipher.doFinal(message.getBytes(charset)));
+
+            Cipher rsaCipher = Cipher.getInstance(RSA_ALGO);
+            rsaCipher.init(Cipher.ENCRYPT_MODE, this.keySpecs.get("default").getPublic());
+            String sign = Base64.toBase64String(rsaCipher.doFinal(aesKeyBytes));
+
+            ObjectNode node = this.mapper.createObjectNode().put("data", data).put("sign", sign);
+            return exchange.getResponse().bufferFactory().wrap(mapper.writeValueAsString(node).getBytes(charset));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "加密失败", e);
         } finally {
@@ -112,17 +134,17 @@ public class JsonxMessageEncryptor extends MessageEncryptor {
         try {
             Charset charset = ComponentUtils.getCharsetOrUTF8(exchange.getRequest().getHeaders());
             String msg = buffer.toString(charset);
-            byte[] plainTextData = msg.getBytes(charset);
-            Cipher cipher = Cipher.getInstance(ALGO);
-            PrivateKey privateKey = keySpecs.get("default").getPrivate();
-            cipher.init(Cipher.DECRYPT_MODE, privateKey);
-            DataBuffer dataBuffer = exchange.getResponse().bufferFactory().allocateBuffer();
-            dataBuffer.write(cipher.doFinal(plainTextData));
-            DataBuffer retainedSlice = dataBuffer.retainedSlice(0, dataBuffer.readableByteCount());
-            log.info("read:{} token:{} body:{}", exchange.getRequest().getURI().getPath(),
-                    exchange.getLogPrefix(), retainedSlice.toString(charset));
-            DataBufferUtils.release(retainedSlice);
-            return dataBuffer;
+            JsonNode node = this.mapper.readTree(msg);
+            Cipher rsaCipher = Cipher.getInstance(RSA_ALGO);
+            rsaCipher.init(Cipher.DECRYPT_MODE, this.keySpecs.get("default").getPrivate());
+            byte[] aesKeyBytes = rsaCipher.doFinal(Base64.decode(node.required("sign").asText()));
+            Cipher cipher = Cipher.getInstance(AES_ALGO);
+            SecretKey secretKey = new SecretKeySpec(aesKeyBytes, 0, aesKeyBytes.length, AES_ALGO);
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            byte[] bytes = cipher.doFinal(Base64.decode(node.required("data").asText()));
+            log.info("read:{} token:{} body:{}", exchange.getRequest().getURI().getPath(), exchange.getLogPrefix(),
+                    new String(bytes, charset));
+            return exchange.getResponse().bufferFactory().wrap(bytes);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "解密失败", e);
         } finally {

@@ -63,10 +63,6 @@ spring:
 
 gateway:
   tenant:
-    jsonm-specs:
-      default:
-        privateKey: "471eb0ced64f493216cdfc9dcb1289b474b2297f5d10b41b77ec63aadf292973"
-        publicKey: "04842ecf2c7c770c7d1201eebcd39000983405348e1e097de5515faf209cc1acc7df3b0e54fc58d31e99afc6af5ef0785edbb2af6c5135ebbd4e84c926fdcbe88c"
     jsonx-specs:
       default:
         privateKey: "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAL8VEIO4Rh9R95+w\nQIUFpOJ/5MMHoGlzg/rZIlCBIFUuGVPRZZAuq+EK7ROLVDNKq55FjBraWGj41uZm\nGDfDmGChHkwmFmW3yNauguYylEPJqk6uUzVMI+0qYmvgLfgFVygUXKQUmlmVxRQN\neUG814v7oM2IxLgrDLMGj9LC0eJlAgMBAAECgYBSJqxC9SawsHzVmuEiT5rkBjhD\n4TOGIrPLVS77jYhpFris4InZwzcCOcBTdsNsid3e3eeuY9E+0D0UMTCYSO9pXFun\n95aoaAvstJ3VVlcx5SIGPOwMh+/y14KhaEXXBZENhXBY6F6sdsJ7JN6X/YuFcBmd\nKHd6ObrlY/IZyuS2wQJBAPjW7OSmKPBfKklaH5efxAdbRBwhxunPvTLymmu97sC6\nELxPvD8UYeU1K6oLzOJW5tbAOgIsRwXKs7gihyWIePcCQQDElKuxGLk6p0SYPAUT\nymlntNf9v1+qUeiqoXRRVk/QrcfpcRT3LkOre9RCoWH9gVhINhRzp657RX6Eb+6/\nwOSDAkBuIUkU5QknYSbo8e8bfwUWMGlTfgt3/Y4B12dKmfPp7i9r+GobDN1KwR6D\nEtfpsIZXsxm5TnlccdraesWPcff/AkBVWIqWD7rTeS1xvpUhu345tS0VEJITGw6d\njg03BvcODXS+qAbHLgHZIKDN8MzfR9mxODF26PT6tfgwvXv1KmTLAkEA7FGthHqe\n7z5zwnlX5NpEuww4acBb1n67bjk09BViLmzo/zHxpjqxGJRVMYPzKowXo0IQ3siS\nPom43THeo996xQ=="

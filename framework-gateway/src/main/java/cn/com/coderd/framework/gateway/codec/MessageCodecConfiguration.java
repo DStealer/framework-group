@@ -23,8 +23,7 @@ public class MessageCodecConfiguration {
     @Bean
     public MessageCodeGlobalFilter cryptGlobalFilter(GatewayTenantProperties properties) {
         List<MessageEncryptor> encryptors = new ArrayList<>();
-        encryptors.add(new JsonmMessageEncryptor(properties.getJsonmSpecs()));
-        encryptors.add(new JsonxMessageEncryptor(properties.getJsonxSpecs()));
+        encryptors.add(new JsonXMessageEncryptor(properties.getJsonxSpecs()));
         log.info("启用的自定义消息转换器:{}", encryptors);
         return new MessageCodeGlobalFilter(encryptors);
     }

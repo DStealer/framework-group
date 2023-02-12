@@ -15,7 +15,6 @@ import java.util.Map;
 @Data
 @ConfigurationProperties(prefix = "gateway.tenant")
 public class GatewayTenantProperties implements Serializable {
-    private transient Map<String, KeySpec> jsonmSpecs = new HashMap<>();
     private transient Map<String, KeySpec> jsonxSpecs = new HashMap<>();
     private List<String> excludePatterns = new ArrayList<>(0);
 }
