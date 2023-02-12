@@ -117,7 +117,6 @@ dubbo:
       threadpool: cached
       corethreads: 200
       threads: 1000
-      serialization: kryo
   consumer:
     check: false
     default: true

@@ -127,7 +127,6 @@ dubbo:
       corethreads: 200
       server: netty4
       threads: 1000
-      serialization: kryo
     hessian:
       name: hessian
       default: false
