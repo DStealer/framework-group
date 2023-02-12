@@ -5,6 +5,8 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Paths;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.Parameter;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,21 +45,25 @@ public class OpenApiController {
                     .url(String.format("/%s", name))
                     .description("Generated gateway url"));
         }
+        api.getComponents()
+                .addSecuritySchemes("authorization-token",
+                        new SecurityScheme()
+                                .name("token")
+                                .type(SecurityScheme.Type.APIKEY)
+                                .in(SecurityScheme.In.HEADER)
+                                .description("认证token")
+                );
         Paths paths = api.getPaths();
         if (paths != null) {
             paths.values().forEach(e -> {
-                Parameter token = new Parameter()
-                        .in(ParameterIn.HEADER.toString())
-                        .schema(new StringSchema())
-                        .name("token")
-                        .description("认证信息");
-                e.addParametersItem(token);
-                Parameter gray = new Parameter()
+                e.getOptions()
+                        .addSecurityItem(new SecurityRequirement()
+                                .addList("authorization-token"));
+                e.addParametersItem(new Parameter()
                         .in(ParameterIn.HEADER.toString())
                         .schema(new StringSchema())
                         .name("t-gray")
-                        .description("灰度版本");
-                e.addParametersItem(gray);
+                        .description("灰度版本"));
             });
         }
         return api;
