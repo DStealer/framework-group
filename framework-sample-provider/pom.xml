@@ -15,6 +15,10 @@
     <description>
         生产者代码示例
     </description>
+    <properties>
+        <maven.install.skip>true</maven.install.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>cn.com.coderd.framework</groupId>

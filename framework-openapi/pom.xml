@@ -14,6 +14,10 @@
     <description>
         该项目为openapi集成,通过该项目配置访问各个项目的接口定义
     </description>
+    <properties>
+        <maven.install.skip>true</maven.install.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>cn.com.coderd.framework</groupId>
