@@ -33,7 +33,7 @@ services:
     depends_on:
       - rmq_name_svr
   mysql-sa:
-    image: mysql:5.7
+    image: mysql:8.0
     container_name: mysql-sa
     network_mode: host
     #    ports:
