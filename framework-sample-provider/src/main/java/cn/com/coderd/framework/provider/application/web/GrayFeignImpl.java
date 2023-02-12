@@ -13,6 +13,6 @@ public class GrayFeignImpl implements GrayFeign {
     @Override
     public Result<String> echo(Entity entity) {
         log.info("echo:{}", entity);
-        return Result.ok(entity.getMessage());
+        return Result.ok(entity.getMessage(), null);
     }
 }

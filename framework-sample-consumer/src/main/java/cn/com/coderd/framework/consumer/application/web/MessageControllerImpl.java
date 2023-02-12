@@ -29,7 +29,7 @@ public class MessageControllerImpl implements MessageController {
         boolean send = streamBridge.send("login-message", dto);
         if (send) {
             log.info("消息发送成功:{}", dto);
-            return Result.ok(new LoginMessageResponse().setContent(dto.getContent()));
+            return Result.ok(new LoginMessageResponse().setContent(dto.getContent()), null);
         } else {
             log.info("消息发送失败:{}", dto);
             return Result.fail("GA0002", "发送失败");

@@ -25,6 +25,6 @@ public class GrpcController implements HelloController {
                 .setName(request.getName()).build());
         log.info("backend reply:{}", reply.getMessage());
         return Result.ok(new HelloResponse()
-                .setMessage(reply.getMessage()));
+                .setMessage(reply.getMessage()), null);
     }
 }

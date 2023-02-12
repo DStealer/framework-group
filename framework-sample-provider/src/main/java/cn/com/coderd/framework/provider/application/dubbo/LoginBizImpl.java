@@ -35,6 +35,6 @@ public class LoginBizImpl implements LoginBiz {
             return Result.fail("SP0001", "密码错误");
         }
         log.info("用户:{}登陆成功", one);
-        return Result.ok(new LoginDO());
+        return Result.ok(new LoginDO(), null);
     }
 }
