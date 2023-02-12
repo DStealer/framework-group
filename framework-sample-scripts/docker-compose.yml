@@ -6,7 +6,7 @@ services:
     #    ports:
     #      - 9876:9876
     network_mode: host
-    restart: on-failure
+    restart: unless-stopped
     command: sh mqnamesrv
   rmq_broker:
     image: apacherocketmq/rocketmq-broker:4.5.0-alpine
@@ -18,7 +18,7 @@ services:
     depends_on:
       - rmq_name_svr
     network_mode: host
-    restart: on-failure
+    restart: unless-stopped
     volumes:
       - ./broker.conf:/home/rocketmq/broker.conf
     #    command: sh mqbroker -n rmq_name_svr:9876 -c /home/rocketmq/broker.conf
@@ -27,7 +27,7 @@ services:
     image: apacherocketmq/rocketmq-dashboard:1.0.0
     container_name: rmq_dashboard
     network_mode: host
-    restart: on-failure
+    restart: unless-stopped
     #    ports:
     #      - 8081:8080
     depends_on:
@@ -38,7 +38,7 @@ services:
     network_mode: host
     #    ports:
     #    - 3306:3306
-    restart: on-failure
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root@123
   nacos-quick:
@@ -47,7 +47,7 @@ services:
     network_mode: host
     #    ports:
     #    - 8848:8848
-    restart: on-failure
+    restart: unless-stopped
     environment:
       MODE: standalone
       SPRING_DATASOURCE_PLATFORM: mysql
@@ -64,17 +64,17 @@ services:
     network_mode: host
     #    ports:
     #    - 6379:6379
-    restart: on-failure
+    restart: unless-stopped
     command: redis-server --requirepass foobared
 
   sentinel-dashboard:
     image: bladex/sentinel-dashboard:1.8.0
     container_name: sentinel-dashboard
     network_mode: host
-    restart: on-failure
+    restart: unless-stopped
 
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
     network_mode: host
-    restart: on-failure
+    restart: unless-stopped
