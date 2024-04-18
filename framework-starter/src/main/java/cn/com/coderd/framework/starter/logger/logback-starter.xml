@@ -6,6 +6,8 @@ logback日志配置项增强
 -->
 
 <included>
+    <!-- To prevent data loss when the process exits, please remember to add this configuration -->
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
     <!--引入spring默认配置-->
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <!--设置默认全局日志目录-->
